@@ -117,7 +117,7 @@ const UsersEdit = () => {
     }
     return (
         loading ? <CSpinner color="light" /> :
-            user ?
+            !isError ?
                 <>
                     <h1>Edit Users</h1>
                     {isError && <h4>No Internet Connection.</h4>}

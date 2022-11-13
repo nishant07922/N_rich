@@ -44,15 +44,15 @@ class UsersController extends Controller
     {
         $user = array();
         $payload = json_decode($request->getContent(), true);
-        $fields = [
+        $fields = array(
             'name' => $payload['user'],
-            'email' => base64_decode($payload['email']),
+            'email' => base64_encode($payload['email']),
             'password' => md5($payload['password']),
             'roleId' => $payload['roleId']
-        ];
+        );
         // try {
-            $user['data'] = Users::create($fields);
-            $user['success_message'] = $payload['user'] . " user has been created successfully.";
+        $user['data'] = Users::create($fields);
+        $user['success_message'] = $payload['user'] . " user has been created successfully.";
         // } catch (Exception $e) {
         //     $user['error_message'] = "A user " . $payload['user'] . " already exists.";
         // }
@@ -118,6 +118,7 @@ class UsersController extends Controller
      */
     public function destroy($users)
     {
+        // dd(json_decode($users));
         return Roles::destroy(json_decode($users));
     }
 }

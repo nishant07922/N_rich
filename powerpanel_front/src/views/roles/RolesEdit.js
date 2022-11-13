@@ -104,7 +104,7 @@ const RolesEdit = () => {
     }
     return (
         loading ? <CSpinner color="light" /> :
-            role ?
+            !isError ?
                 <>
                     <h1>Edit Roles</h1>
                     {isError && <h4>No Internet Connection.</h4>}
