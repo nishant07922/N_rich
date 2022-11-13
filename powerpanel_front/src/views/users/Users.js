@@ -25,10 +25,10 @@ import { Link } from 'react-router-dom'
 import secureLocalStorage from "react-secure-storage"
 import Pagination from 'src/components/pagination/Pagination'
 
-const Roles = () => {
+const Users = () => {
 
   const [PageSize, setPageSize] = useState(100)
-  const [roles, setRoles] = useState([]);
+  const [users, setUsers] = useState([]);
   const [refresh, setRefresh] = useState(0);
   const [namesearch, setNamesearch] = useState("")
   const [loading, setLoading] = useState(true)
@@ -41,15 +41,15 @@ const Roles = () => {
     const firstPageIndex = (currentPage - 1) * PageSize;
     const lastPageIndex = firstPageIndex + PageSize;
     if (!loading) {
-      return roles.slice(firstPageIndex, lastPageIndex);
+      return users.slice(firstPageIndex, lastPageIndex);
     } else {
       return [];
     }
-  }, [currentPage, namesearch, refresh, PageSize, roles]);
+  }, [currentPage, namesearch, refresh, PageSize, users]);
 
   useEffect(() => {
 
-    apiClient.get('/roles',
+    apiClient.get('/users',
       {
         headers: {
           'filters': JSON.stringify(tablefilters)
@@ -57,7 +57,7 @@ const Roles = () => {
       }
     )
       .then((res) => {
-        setRoles(res.data)
+        setUsers(res.data)
         setCurrentPage(1)
       })
       .catch(function (error) {
@@ -72,7 +72,7 @@ const Roles = () => {
   }, [refresh, namesearch])
 
   const deleteSelectedId = () => {
-    apiClient.delete('/roles/' + JSON.stringify(selectedIds))
+    apiClient.delete('/users/' + JSON.stringify(selectedIds))
       .then((res) => {
         setRefresh((prev) => { return prev + 1 })
       })
@@ -85,7 +85,7 @@ const Roles = () => {
   }
 
   const deleteId = (e) => {
-    apiClient.delete('/roles/' + e.target.getAttribute('data-value'))
+    apiClient.delete('/users/' + e.target.getAttribute('data-value'))
       .then((res) => {
         setRefresh((prev) => { return prev + 1 })
       })
@@ -153,14 +153,14 @@ const Roles = () => {
               <option value="10">Results length  10</option>
             </CFormSelect>
           </CCol>
-          <CCol sm={7}>{roles.length > PageSize ? "Showing Results " + PageSize + " out of " + roles.length : "Showing All " + roles.length + " Results"}</CCol>
+          <CCol sm={7}>{users.length > PageSize ? "Showing Results " + PageSize + " out of " + users.length : "Showing All " + users.length + " Results"}</CCol>
           <CCol sm={6} md={1}>
             <CButton color="dark" shape="rounded-pill" onClick={refreshTable}>
               Refresh
             </CButton>
           </CCol>
           <CCol xs={6} md={2}>
-            <CFormInput type="text" placeholder="Search By Role" aria-label="Search By Role" onKeyUp={nameSearchChange} />
+            <CFormInput type="text" placeholder="Search By User" aria-label="Search By User" onKeyUp={nameSearchChange} />
           </CCol>
         </CRow>
 
@@ -168,17 +168,17 @@ const Roles = () => {
           <CTableHead color="dark">
             <CTableRow>
               <CTableHeaderCell scope="col">Select</CTableHeaderCell>
+              <CTableHeaderCell scope="col">User</CTableHeaderCell>
               <CTableHeaderCell scope="col">Role</CTableHeaderCell>
               <CTableHeaderCell scope="col">Created</CTableHeaderCell>
               <CTableHeaderCell scope="col">Last Updated</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Edit Permission</CTableHeaderCell>
               <CTableHeaderCell scope="col">Publish</CTableHeaderCell>
               <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
           <CTableBody>
             {
-              roles.length > 0 ?
+              users.length > 0 ?
                 currentTableData.map((item, index) => {
                   return <CTableRow key={item.id}>
                     <CTableHeaderCell scope="row">
@@ -189,13 +189,11 @@ const Roles = () => {
                         {item.name}
                       </Link>
                     </CTableDataCell>
+                    <CTableDataCell>
+                      {item.roles.name}
+                    </CTableDataCell>
                     <CTableDataCell>{new Date(item.created_at).toLocaleString()}</CTableDataCell>
                     <CTableDataCell>{new Date(item.updated_at).toLocaleString()}</CTableDataCell>
-                    <CTableDataCell>
-                      <Link to={"/rolepermission/edit/" + item.id}>
-                        <CIcon icon={cilPencil} className="flex-shrink-0 me-2" width={24} height={24} />
-                      </Link>
-                    </CTableDataCell>
                     <CTableDataCell>
                       <CFormSwitch></CFormSwitch>
                     </CTableDataCell>
@@ -217,7 +215,7 @@ const Roles = () => {
           <Pagination
             className="pagination-bar"
             currentPage={currentPage}
-            totalCount={roles.length}
+            totalCount={users.length}
             pageSize={PageSize}
             onPageChange={page => setCurrentPage(page)}
           />
@@ -226,13 +224,13 @@ const Roles = () => {
         <CRow className="justify-content-between">
           <CCol xs={10}>
             <CButton color="danger" onClick={deleteSelectedId} shape="rounded-pill">
-              Delete Selected Roles
+              Delete Selected Users
             </CButton>
           </CCol>
           <CCol xs={2}>
             <Link to="add">
               <CButton color="primary" shape="rounded-pill">
-                Add Role
+                Add User
               </CButton>
             </Link>
           </CCol>
@@ -243,4 +241,4 @@ const Roles = () => {
   )
 }
 
-export default Roles
+export default Users

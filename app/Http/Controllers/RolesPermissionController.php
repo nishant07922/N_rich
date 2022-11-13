@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Exception;
+use Illuminate\Http\Request;
 use App\Models\RolesPermission;
 use App\Models\Models;
+use Spatie\Permission\Models\Role;
 use App\Http\Requests\StoreRolesPermissionRequest;
 use App\Http\Requests\UpdateRolesPermissionRequest;
 use Spatie\Permission\Models\Permission;
@@ -47,9 +49,16 @@ class RolesPermissionController extends Controller
      * @param  \App\Models\RolesPermission  $rolesPermission
      * @return \Illuminate\Http\Response
      */
-    public function show($rolepermission, RolesPermission $rolesPermission)
+    public function show($rolepermission, RolesPermission $rolesPermission,Request $request)
     {
         $return_data = false;
+
+        $roleId = $request->header('roleId');
+        $role = Role::findById($roleId,null);
+        
+        if(!$role->hasPermissionTo('list rolespermission')){
+            return false;
+        }
 
         $Models_id = Permission::select('name', 'models_id')->distinct()->get();
 

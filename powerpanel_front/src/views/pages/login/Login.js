@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import {
   CButton,
   CCard,
+  CAlert,
   CCardBody,
   CCardGroup,
   CCol,
@@ -14,23 +15,71 @@ import {
   CRow,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { cilLockLocked, cilUser } from '@coreui/icons'
+import { cilLockLocked, cilUser, cilWarning, cilCheckCircle } from '@coreui/icons'
 import secureLocalStorage from "react-secure-storage"
+import apiClient from 'src/apiclients/apiClient'
+import { useNavigate } from 'react-router-dom'
 
 const Login = () => {
 
-  const clickLogin = () => {
-    secureLocalStorage.setItem('loginUser', JSON.stringify({
-      "isLoggedIn": true,
-      "data": {
-        "name": "superadmin",
-        "email": "bmlzaGFudHBhdGVsMDc5MjJAZ21haWwuY29t",
-        "roleId": 2,
-        "roleName": "superadmin"
-      }
-    }))
+  const [validated, setValidated] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState(false)
+  const [showAlert, setShowAlert] = useState(false)
+  const [password, setPassword] = useState(false)
+  const [email, setEmail] = useState(false)
+  const navigate = useNavigate()
+
+  const handleSubmit = (event) => {
+    const form = event.currentTarget
+    if (form.checkValidity() === false) {
+      event.preventDefault()
+      event.stopPropagation()
+    } else {
+      apiClient.post('/user-login', {
+        email: email,
+        password: password
+      })
+        .then((res) => {
+          if (!res.data.success || res.data.status === 'failed') {
+            setSuccess(false)
+            setError(res.data.message)
+            setShowAlert(true)
+            setTimeout(function () {
+              setShowAlert(false)
+            }, 5000)
+          } else {
+            setError(false)
+            setSuccess(res.data.message)
+            setShowAlert(true)
+            setTimeout(function () {
+              setShowAlert(false)
+            }, 3000)
+            secureLocalStorage.setItem('loginUser', JSON.stringify({
+              "isLoggedIn": true,
+              "data": res.data.data
+            }))
+              navigate('/')
+          }
+        })
+        .catch(function (error) {
+          setSuccess(false)
+          setError(error.response.data.message)
+          setShowAlert(true)
+          setTimeout(function () {
+            setShowAlert(false)
+          }, 5000)
+        });
+    }
+    setValidated(true)
   }
 
+  const onChangeEmail = (e) => {
+    setEmail(e.target.value)
+  }
+  const onChangePassword = (e) => {
+    setPassword(e.target.value)
+  }
   return (
     <div className="bg-light min-vh-100 d-flex flex-row align-items-center">
       <CContainer>
@@ -39,28 +88,37 @@ const Login = () => {
             <CCardGroup>
               <CCard className="p-4">
                 <CCardBody>
-                  <CForm>
+                  {showAlert && <CAlert color={error ? "danger" : "success"} className="d-flex align-items-center">
+                    <CIcon icon={error ? cilWarning : cilCheckCircle} className="flex-shrink-0 me-2" width={24} height={24} />
+                    <div>
+                      {error ? error : success}
+                    </div>
+                  </CAlert>}
+                  <CForm onSubmit={handleSubmit} noValidate className="needs-validation" validated={validated}>
                     <h1>Login</h1>
                     <p className="text-medium-emphasis">Sign In to your account</p>
-                    <CInputGroup className="mb-3">
+                    <CInputGroup className="mb-3 has-validation">
                       <CInputGroupText>
                         <CIcon icon={cilUser} />
                       </CInputGroupText>
-                      <CFormInput placeholder="Username" autoComplete="username" />
+                      <CFormInput onChange={onChangeEmail} type="text" aria-describedby="Username" feedbackInvalid="Please choose a username." placeholder="Username" autoComplete="username" required />
                     </CInputGroup>
                     <CInputGroup className="mb-4">
                       <CInputGroupText>
                         <CIcon icon={cilLockLocked} />
                       </CInputGroupText>
                       <CFormInput
+                        onChange={onChangePassword}
                         type="password"
                         placeholder="Password"
                         autoComplete="current-password"
+                        feedbackInvalid="Please choose a password."
+                        required
                       />
                     </CInputGroup>
                     <CRow>
                       <CCol xs={6}>
-                        <CButton onClick={clickLogin} color="primary" className="px-4">
+                        <CButton color="primary" type="submit" className="px-4">
                           Login
                         </CButton>
                       </CCol>

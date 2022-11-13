@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\UsersPermission;
-use App\Http\Requests\Storeusers_permissionRequest;
-use App\Http\Requests\Updateusers_permissionRequest;
+use App\Models\Roles;
+use App\Http\Requests\Roles\StoreRolesRequest;
+use App\Http\Requests\Roles\UpdateRolesRequest;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\Request;
 use Exception;
 
-class UsersPermissionController extends Controller
+class RolesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -28,12 +28,17 @@ class UsersPermissionController extends Controller
         // $permission = Permission::create(['name' => 'list roles']);
         // $permission = Permission::create(['name' => 'publish roles']);
 
-        return UsersPermission::select('id', 'name', 'created_at', 'updated_at')
+        return Roles::select('id', 'name', 'created_at', 'updated_at')
             ->tablefilter($filters)
             ->rolePermission($role_id)
             ->get();
     }
 
+    public function selectroles()
+    {
+        $role_select = Roles::select('id', 'name')->get();
+        return $role_select;
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -47,10 +52,10 @@ class UsersPermissionController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\Storeusers_permissionRequest  $request
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Storeusers_permissionRequest $request)
+    public function store(StoreRolesRequest $request)
     {
         $role = array();
         $payload = json_decode($request->getContent(), true);
@@ -66,32 +71,43 @@ class UsersPermissionController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\UsersPermission  $UsersPermission
+     * @param  \App\Models\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function show($roles, UsersPermission $UsersPermission, Request $request)
+    public function show($roles, Roles $Roles, Request $request)
     {
         $role_id = $request->header('roleId');
 
-        return UsersPermission::select('id', 'name')
+        return Roles::select('id', 'name')
             ->rolePermission($role_id)
             ->find(intval($roles));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Show the form for editing the specified resource.
      *
-     * @param  \App\Http\Requests\Updateusers_permissionRequest  $request
-     * @param  \App\Models\UsersPermission  $UsersPermission
+     * @param  \App\Models\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function update($roles, Updateusers_permissionRequest $request, UsersPermission $UsersPermission)
+    public function edit(Roles $roles)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Roles  $roles
+     * @return \Illuminate\Http\Response
+     */
+    public function update($roles, StoreRolesRequest $request, Roles $Roles)
     {
         $role = array();
         $payload = json_decode($request->getContent(), true);
 
         try {
-            $role['data'] = UsersPermission::find(intval($roles))->update(['name' => $payload['role']]);
+            $role['data'] = Roles::find(intval($roles))->update(['name' => $payload['role']]);
             $role['success_message'] = $payload['role'] . " role has been updated.";
         } catch (Exception $e) {
             $role['error_message'] = "A role " . $payload['role'] . " already exists.";
@@ -103,11 +119,11 @@ class UsersPermissionController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\UsersPermission  $UsersPermission
+     * @param  \App\Models\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function destroy(UsersPermission $UsersPermission)
+    public function destroy($roles)
     {
-       
+        return Roles::destroy(json_decode($roles));
     }
 }

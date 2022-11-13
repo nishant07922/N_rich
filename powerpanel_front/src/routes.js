@@ -55,6 +55,11 @@ const Roles = React.lazy(() => import('./views/roles/Roles'))
 const RolesAdd = React.lazy(() => import('./views/roles/RolesAdd'))
 const RolesEdit = React.lazy(() => import('./views/roles/RolesEdit'))
 
+//Users
+const Users = React.lazy(() => import('./views/users/Users'))
+const UsersAdd = React.lazy(() => import('./views/users/UsersAdd'))
+const UsersEdit = React.lazy(() => import('./views/users/UsersEdit'))
+
 //Roles Permission
 const RolesPermissionAdd = React.lazy(() => import('./views/rolepermission/RolePermissionAdd'))
 const RolesPermissionEdit = React.lazy(() => import('./views/rolepermission/RolePermissionEdit'))
@@ -111,6 +116,10 @@ const routes = [
   { path: '/rolepermission/add', name: 'Add Roles Permission', element: RolesPermissionAdd },
   { path: '/rolepermission/edit', name: 'Edit Roles Permission', element: RolesPermissionEdit },
   { path: '/rolepermission/edit/:role_permission_id', name: 'Edit Roles Permission', element: RolesPermissionEdit },
+  { path: '/users', name: 'Users', element: Users },
+  { path: '/users/add', name: 'Add Users', element: UsersAdd },
+  { path: '/users/edit', name: 'Edit Users', element: UsersEdit },
+  { path: '/users/edit/:user_id', name: 'Edit Users', element: UsersEdit },
 ]
 
 export default routes

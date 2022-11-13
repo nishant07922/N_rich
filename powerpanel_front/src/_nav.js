@@ -305,6 +305,11 @@ const _nav = [
         name: 'Roles',
         to: '/roles',
       },
+      {
+        component: CNavItem,
+        name: 'Users',
+        to: '/users',
+      },
     ],
   },
   {

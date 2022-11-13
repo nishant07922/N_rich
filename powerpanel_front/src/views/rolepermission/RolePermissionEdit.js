@@ -11,7 +11,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react';
 import { cilWarning, cilCheckCircle } from '@coreui/icons';
-import axios from 'axios'
+import apiClient from 'src/apiclients/apiClient';
 import { useParams, useNavigate, Navigate } from 'react-router-dom'
 import secureLocalStorage from 'react-secure-storage'
 
@@ -36,12 +36,8 @@ const RolePermissionEdit = () => {
     }
 
     useEffect(() => {
-        axios.get('http://localhost/nrich/public/api/rolepermission/' + role_permission_id,
-            {
-                headers: {
-                    'rolepermissionId': tokenString.data.rolepermissionId,
-                }
-            })
+
+        apiClient.get('/rolepermission/' + role_permission_id)
             .then((res) => {
                 setRolePermission(res.data)
                 setIsError(false)
@@ -63,14 +59,14 @@ const RolePermissionEdit = () => {
 
     const handleFormChange = (index, event) => {
         let data = [...inputFields];
-        const dataObj= {
+        const dataObj = {
             name: event.target.name,
             permission_id: event.target.value,
             isChecked: event.target.checked
         };
         data.push(dataObj)
         setInputFields(data)
-        
+
     }
 
     const handleSubmit = (event) => {
@@ -84,9 +80,10 @@ const RolePermissionEdit = () => {
             event.stopPropagation()
             setShowAlert(false)
         } else {
-            axios.patch('http://localhost/nrich/public/api/rolepermission/' + role_permission_id, {
-                rolepermission: inputFields
-            })
+            apiClient.patch('/rolepermission/' + role_permission_id,
+                {
+                    rolepermission: inputFields
+                })
                 .then((res) => {
                     if ('error_message' in res.data) {
                         setSuccess(false)
@@ -104,10 +101,9 @@ const RolePermissionEdit = () => {
                         }, 3000)
 
                         if (afterSubmit === 'edit') {
-                            
                             navigate('/rolepermission/edit/' + role_permission_id)
                         } else if (afterSubmit === 'exit') {
-                            navigate('/rolepermission')
+                            navigate('/roles')
                         }
                     }
                 })
@@ -119,7 +115,6 @@ const RolePermissionEdit = () => {
                         setShowAlert(false)
                     }, 5000)
                 });
-
         }
 
         setValidated(true)

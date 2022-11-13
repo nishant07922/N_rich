@@ -3,8 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UsersPermissionController;
+use App\Http\Controllers\RolesController;
 use App\Http\Controllers\RolesPermissionController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,5 +34,7 @@ Route::post("user-signup",[UserController::class,'userSignUp']);
 Route::post("user-login", [UserController::class,'userLogin']);
 Route::get("user/{email}",[UserController::class,'userDetail'] );
 
-Route::apiResource('roles', UsersPermissionController::class);
+Route::apiResource('roles', RolesController::class);
+Route::get('selectroles', [RolesController::class,'selectroles']);
+Route::apiResource('users', UsersController::class);
 Route::apiResource('rolepermission', RolesPermissionController::class);
