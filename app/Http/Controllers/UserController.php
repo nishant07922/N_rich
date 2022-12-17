@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -34,7 +35,7 @@ class UserController extends Controller
 
         $userDataArray          =       array(
             "name"               =>          $name,
-            "email"              =>          base64_encode ( $request->email ),
+            "email"              =>          base64_encode($request->email),
             "password"           =>          md5($request->password),
             "roleId"           =>          $request->role_id,
         );
@@ -46,6 +47,9 @@ class UserController extends Controller
         }
 
         $user                   =           User::create($userDataArray);
+
+        
+      
 
         if (!is_null($user)) {
             return response()->json(["status" => $this->status_code, "success" => true, "message" => "Registration completed successfully", "data" => $user]);
@@ -84,10 +88,15 @@ class UserController extends Controller
             // if password is correct
             if (!is_null($password_status)) {
                 // $user           =       $this->userDetail(base64_encode($request->email));
-                $user           =       User::select('name','email','roleId')->where("email", base64_encode($request->email))->first();
-                
+                $user           =       User::select('name', 'email', 'roleId')->where("email", base64_encode($request->email))->first();
 
-                return response()->json(["status" => $this->status_code, "success" => true, "message" => "You have logged in successfully", "data" => $user]);
+                $all_roles_permissions = false;
+                if(!empty($user->roleId)){
+                    $all_roles = Role::findById($user->roleId,null);
+                    $all_roles_permissions =  $all_roles->permissions;
+                }
+
+                return response()->json(["status" => $this->status_code,"permissions"=>$all_roles_permissions, "success" => true, "message" => "You have logged in successfully", "data" => $user]);
             } else {
                 return response()->json(["status" => "failed", "success" => false, "message" => "Unable to login. Incorrect password."]);
             }

@@ -7,13 +7,20 @@ import secureLocalStorage from "react-secure-storage"
 import routes from '../routes'
 
 const AppContent = () => {
+  const tokenString = JSON.parse(secureLocalStorage.getItem('loginUser'))
+  let permissionsArr = tokenString.permissions
+
+  permissionsArr.forEach((permission_obj ,index) => {
+    permissionsArr[index] = permission_obj.name
+  })
+
   return (
     <CContainer lg>
       <Suspense fallback={<CSpinner color="primary" />}>
         <Routes>
           {routes.map((route, idx) => {
             return (
-              route.element && (
+              route.element && (permissionsArr.includes(route.permission)) ?(
                 <Route
                   key={idx}
                   path={route.path}
@@ -27,7 +34,7 @@ const AppContent = () => {
                     )
                   }
                 />
-              )
+              ):<></>
             )
           })}
           <Route path="/" element={<Navigate to="dashboard" replace />} />

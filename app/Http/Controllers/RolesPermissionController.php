@@ -51,7 +51,7 @@ class RolesPermissionController extends Controller
      */
     public function show($rolepermission, RolesPermission $rolesPermission,Request $request)
     {
-        $return_data = false;
+        $return_data = array();
 
         $roleId = $request->header('roleId');
         $role = Role::findById($roleId,null);
@@ -60,9 +60,10 @@ class RolesPermissionController extends Controller
             return false;
         }
 
-        $Models_id = Permission::select('name', 'models_id')->distinct()->get();
+        $Models_id = Permission::select( 'models_id')->groupBy('models_id')->get();
+        
 
-        foreach ($Models_id as $model_id) {
+        foreach ($Models_id as $index=>$model_id) {
             $permission_data = Permission::select('id', 'name')->where('models_id', $model_id->models_id)->get();
             foreach ($permission_data as $key => $per_data) {
                 if (RolesPermission::where('role_id', $rolepermission)->where('permission_id', $per_data->id)->count() > 0) {
@@ -71,7 +72,8 @@ class RolesPermissionController extends Controller
                     $permission_data[$key]['roleHasPermission'] = false;
                 }
             }
-            $return_data[Models::select('name')->find($model_id->models_id)->first()->name] = $permission_data;
+            $model_name = Models::find($model_id->models_id)->name;
+            $return_data[$model_name] = $permission_data;
         }
         return $return_data;
     }

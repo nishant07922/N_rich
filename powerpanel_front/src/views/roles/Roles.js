@@ -16,6 +16,7 @@ import {
   CFormInput,
   CAlert,
   CPagination,
+  CDataTable,
   CPaginationItem,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'

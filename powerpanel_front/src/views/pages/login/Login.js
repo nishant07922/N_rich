@@ -17,8 +17,8 @@ import {
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser, cilWarning, cilCheckCircle } from '@coreui/icons'
 import secureLocalStorage from "react-secure-storage"
-import apiClient from 'src/apiclients/apiClient'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const Login = () => {
 
@@ -29,18 +29,19 @@ const Login = () => {
   const [password, setPassword] = useState(false)
   const [email, setEmail] = useState(false)
   const navigate = useNavigate()
-
+  
   const handleSubmit = (event) => {
     const form = event.currentTarget
     if (form.checkValidity() === false) {
       event.preventDefault()
       event.stopPropagation()
     } else {
-      apiClient.post('/user-login', {
+      axios.post('http://localhost/nrich/public/api/user-login', {
         email: email,
         password: password
       })
         .then((res) => {
+          
           if (!res.data.success || res.data.status === 'failed') {
             setSuccess(false)
             setError(res.data.message)
@@ -57,9 +58,11 @@ const Login = () => {
             }, 3000)
             secureLocalStorage.setItem('loginUser', JSON.stringify({
               "isLoggedIn": true,
-              "data": res.data.data
+              "data": res.data.data,
+              "permissions":res.data.permissions
             }))
-              navigate('/')
+          
+            navigate('/')
           }
         })
         .catch(function (error) {

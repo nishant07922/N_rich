@@ -118,7 +118,7 @@ class UsersController extends Controller
      */
     public function destroy($users)
     {
-        // dd(json_decode($users));
-        return Roles::destroy(json_decode($users));
+        
+        return Users::destroy(json_decode($users));
     }
 }
