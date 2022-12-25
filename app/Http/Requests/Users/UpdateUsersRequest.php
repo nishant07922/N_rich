@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Users;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Spatie\Permission\Models\Role;
+use Illuminate\Http\Request;
 
 class UpdateUsersRequest extends FormRequest
 {
@@ -11,9 +13,12 @@ class UpdateUsersRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(Request $request)
     {
-        return false;
+        $role_id = $request->header('roleId');
+        $role = Role::findById($role_id,null);
+        
+        return $role->hasPermissionTo('add users');
     }
 
     /**
@@ -24,7 +29,9 @@ class UpdateUsersRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'user' => 'required|max:255',
+            'email' => 'required',
+            'roleId' => 'required',
         ];
     }
 }

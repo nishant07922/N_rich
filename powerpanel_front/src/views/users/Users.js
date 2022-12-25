@@ -172,7 +172,6 @@ const Users = () => {
               <CTableHeaderCell scope="col">Role</CTableHeaderCell>
               <CTableHeaderCell scope="col">Created</CTableHeaderCell>
               <CTableHeaderCell scope="col">Last Updated</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Publish</CTableHeaderCell>
               <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -194,9 +193,6 @@ const Users = () => {
                     </CTableDataCell>
                     <CTableDataCell>{new Date(item.created_at).toLocaleString()}</CTableDataCell>
                     <CTableDataCell>{new Date(item.updated_at).toLocaleString()}</CTableDataCell>
-                    <CTableDataCell>
-                      <CFormSwitch></CFormSwitch>
-                    </CTableDataCell>
                     <CTableDataCell>
                       <CIcon icon={cilXCircle} data-value={item.id} onClick={deleteId} className="flex-shrink-0 me-2" width={24} height={24} />
                     </CTableDataCell>

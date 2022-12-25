@@ -13,35 +13,6 @@ use Spatie\Permission\Models\Permission;
 
 class RolesPermissionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \App\Http\Requests\StoreRolesPermissionRequest  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(StoreRolesPermissionRequest $request)
-    {
-    }
 
     /**
      * Display the specified resource.
@@ -76,17 +47,6 @@ class RolesPermissionController extends Controller
             $return_data[$model_name] = $permission_data;
         }
         return $return_data;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\RolesPermission  $rolesPermission
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(RolesPermission $rolesPermission)
-    {
-        //
     }
 
     /**
@@ -127,14 +87,4 @@ class RolesPermissionController extends Controller
         return $return_arr;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\RolesPermission  $rolesPermission
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(RolesPermission $rolesPermission)
-    {
-        //
-    }
 }

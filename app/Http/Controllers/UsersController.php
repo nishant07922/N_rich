@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\StoreUsersRequest;
+use App\Http\Requests\Users\UpdateUsersRequest;
 use App\Models\Roles;
+use Spatie\Permission\Models\Role;
 use App\Models\Users;
 use Illuminate\Http\Request;
 use Exception;
@@ -19,19 +21,13 @@ class UsersController extends Controller
     {
         $filters = $request->header('filters');
         $role_id = $request->header('roleId');
-
+        $role = Role::findById($role_id,null);
+        
+        if(!$role->hasPermissionTo('list users')){
+            return false;
+        }
         $phone = Users::with('roles')->tablefilter($filters)->rolePermission($role_id)->get();
         return ($phone);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -68,6 +64,12 @@ class UsersController extends Controller
     public function show($users, Request $request)
     {
         $role_id = $request->header('roleId');
+        
+        $role = Role::findById($role_id,null);
+        
+        if(!$role->hasPermissionTo('edit users')){
+            return false;
+        }
 
         $users =  Users::select('id', 'name', 'email', 'roleId')
             ->rolePermission($role_id)
@@ -79,23 +81,13 @@ class UsersController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Users  $users
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Users $users)
-    {
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\Users  $users
      * @return \Illuminate\Http\Response
      */
-    public function update($users, StoreUsersRequest $request)
+    public function update($users, UpdateUsersRequest $request)
     {
         $user = array();
         $payload = json_decode($request->getContent(), true);
@@ -116,9 +108,15 @@ class UsersController extends Controller
      * @param  \App\Models\Users  $users
      * @return \Illuminate\Http\Response
      */
-    public function destroy($users)
+    public function destroy($users,Request $request)
     {
+        $role_id = $request->header('roleId');
+
+        $role = Role::findById($role_id,null);
         
+        if(!$role->hasPermissionTo('delete users')){
+            return false;
+        }
         return Users::destroy(json_decode($users));
     }
 }

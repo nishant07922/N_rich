@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Roles;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Spatie\Permission\Models\Role;
+use Illuminate\Http\Request;
 
 class UpdateRolesRequest extends FormRequest
 {
@@ -11,9 +13,12 @@ class UpdateRolesRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(Request $request)
     {
-        return true;
+        $role_id = $request->header('roleId');
+        $role = Role::findById($role_id,null);
+        
+        return $role->hasPermissionTo('edit rolespermission');
     }
 
     /**

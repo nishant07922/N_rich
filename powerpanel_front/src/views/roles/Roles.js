@@ -173,7 +173,6 @@ const Roles = () => {
               <CTableHeaderCell scope="col">Created</CTableHeaderCell>
               <CTableHeaderCell scope="col">Last Updated</CTableHeaderCell>
               <CTableHeaderCell scope="col">Edit Permission</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Publish</CTableHeaderCell>
               <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -196,9 +195,6 @@ const Roles = () => {
                       <Link to={"/rolepermission/edit/" + item.id}>
                         <CIcon icon={cilPencil} className="flex-shrink-0 me-2" width={24} height={24} />
                       </Link>
-                    </CTableDataCell>
-                    <CTableDataCell>
-                      <CFormSwitch></CFormSwitch>
                     </CTableDataCell>
                     <CTableDataCell>
                       <CIcon icon={cilXCircle} data-value={item.id} onClick={deleteId} className="flex-shrink-0 me-2" width={24} height={24} />

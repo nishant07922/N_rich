@@ -18,15 +18,14 @@ class RolesController extends Controller
      */
     public function index(Request $request)
     {
-        // $role = Role::create(['name' => 'admin']);
-        // return json_encode(Role::all());
         $filters = $request->header('filters');
         $role_id = $request->header('roleId');
-        // $permission = Permission::create(['name' => 'add roles']);
-        // $permission = Permission::create(['name' => 'edit roles']);
-        // $permission = Permission::create(['name' => 'delete roles']);
-        // $permission = Permission::create(['name' => 'list roles']);
-        // $permission = Permission::create(['name' => 'publish roles']);
+
+        $role = Role::findById($role_id,null);
+        
+        if(!$role->hasPermissionTo('list rolespermission')){
+            return false;
+        }
 
         return Roles::select('id', 'name', 'created_at', 'updated_at')
             ->tablefilter($filters)
@@ -38,15 +37,6 @@ class RolesController extends Controller
     {
         $role_select = Roles::select('id', 'name')->get();
         return $role_select;
-    }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -78,20 +68,15 @@ class RolesController extends Controller
     {
         $role_id = $request->header('roleId');
 
+        $role = Role::findById($role_id,null);
+        
+        if(!$role->hasPermissionTo('edit rolespermission')){
+            return false;
+        }
+
         return Roles::select('id', 'name')
             ->rolePermission($role_id)
             ->find(intval($roles));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Roles  $roles
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Roles $roles)
-    {
-        //
     }
 
     /**
@@ -101,7 +86,7 @@ class RolesController extends Controller
      * @param  \App\Models\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function update($roles, StoreRolesRequest $request, Roles $Roles)
+    public function update($roles, UpdateRolesRequest $request, Roles $Roles)
     {
         $role = array();
         $payload = json_decode($request->getContent(), true);
@@ -122,8 +107,16 @@ class RolesController extends Controller
      * @param  \App\Models\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function destroy($roles)
+    public function destroy($roles ,Request $request)
     {
+        $role_id = $request->header('roleId');
+
+        $role = Role::findById($role_id,null);
+        
+        if(!$role->hasPermissionTo('delete rolespermission')){
+            return false;
+        }
+        
         return Roles::destroy(json_decode($roles));
     }
 }

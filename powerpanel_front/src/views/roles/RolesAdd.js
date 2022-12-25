@@ -11,6 +11,7 @@ import CIcon from '@coreui/icons-react';
 import { cilWarning, cilCheckCircle } from '@coreui/icons';
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import apiClient from 'src/apiclients/apiClient';
 
 const RolesAdd = () => {
 
@@ -40,7 +41,7 @@ const RolesAdd = () => {
             event.stopPropagation()
             setShowAlert(false)
         } else {
-            axios.post('http://localhost/nrich/public/api/roles', {
+            apiClient.post('/roles', {
                 role: role
             })
                 .then((res) => {

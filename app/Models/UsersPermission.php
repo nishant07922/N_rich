@@ -19,10 +19,6 @@ class UsersPermission extends Model
     }
     public function scopeRolePermission($query,$role_id)
     {
-        if($role_id == 1){
-            return $query->where('id','>=',$role_id);
-        }else{
-            return $query->where('id','>',$role_id);
-        }
+        return $query;
     }
 }
