@@ -23,7 +23,7 @@ class RolesController extends Controller
 
         $role = Role::findById($role_id,null);
         
-        if(!$role->hasPermissionTo('list rolespermission')){
+        if(!$role->hasPermissionTo('list roles')){
             return false;
         }
 
@@ -70,7 +70,7 @@ class RolesController extends Controller
 
         $role = Role::findById($role_id,null);
         
-        if(!$role->hasPermissionTo('edit rolespermission')){
+        if(!$role->hasPermissionTo('edit roles')){
             return false;
         }
 
@@ -113,7 +113,7 @@ class RolesController extends Controller
 
         $role = Role::findById($role_id,null);
         
-        if(!$role->hasPermissionTo('delete rolespermission')){
+        if(!$role->hasPermissionTo('delete roles')){
             return false;
         }
         

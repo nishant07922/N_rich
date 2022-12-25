@@ -18,7 +18,7 @@ class UpdateRolesRequest extends FormRequest
         $role_id = $request->header('roleId');
         $role = Role::findById($role_id,null);
         
-        return $role->hasPermissionTo('edit rolespermission');
+        return $role->hasPermissionTo('edit roles');
     }
 
     /**

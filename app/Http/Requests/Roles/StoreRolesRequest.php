@@ -18,7 +18,7 @@ class StoreRolesRequest extends FormRequest
         $role_id = $request->header('roleId');
         $role = Role::findById($role_id,null);
         
-        return $role->hasPermissionTo('add rolespermission');
+        return $role->hasPermissionTo('add roles');
     }
 
     /**
