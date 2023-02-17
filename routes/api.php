@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post("user-signup",[UserController::class,'userSignUp']);
 Route::post("user-login", [UserController::class,'userLogin']);
 Route::get("user/{email}",[UserController::class,'userDetail'] );
+Route::get("test",[UsersController::class,'test'] );
 
 Route::apiResource('roles', RolesController::class);
 Route::get('selectroles', [RolesController::class,'selectroles']);

@@ -8,7 +8,11 @@ import routes from '../routes'
 
 const AppContent = () => {
   const tokenString = JSON.parse(secureLocalStorage.getItem('loginUser'))
-  let permissionsArr = tokenString.permissions
+
+  let permissionsArr = [];
+  if(tokenString != null){
+    permissionsArr = tokenString.permissions
+  }
 
   permissionsArr.forEach((permission_obj ,index) => {
     permissionsArr[index] = permission_obj.name

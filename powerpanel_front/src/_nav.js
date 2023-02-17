@@ -289,6 +289,20 @@ const _nav = [
       },
     ],
   },
+  {
+    component: CNavGroup,
+    name: 'Model',
+    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+    permission:['list users','list rolespermission'],
+    items: [
+      {
+        component: CNavItem,
+        name: 'Model Create',
+        to: '/modelcreator/add',
+        permission:['list rolespermission'],
+      },
+    ],
+  },
   // {
   //   component: CNavItem,
   //   name: 'Docs',

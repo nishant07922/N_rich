@@ -60,6 +60,9 @@ const Users = React.lazy(() => import('./views/users/Users'))
 const UsersAdd = React.lazy(() => import('./views/users/UsersAdd'))
 const UsersEdit = React.lazy(() => import('./views/users/UsersEdit'))
 
+//Model Creator
+const ModelCreatorAdd = React.lazy(() => import('./views/modelcreator/ModelCreatorAdd'))
+
 //Roles Permission
 const RolesPermissionAdd = React.lazy(() => import('./views/rolepermission/RolePermissionAdd'))
 const RolesPermissionEdit = React.lazy(() => import('./views/rolepermission/RolePermissionEdit'))
@@ -120,6 +123,7 @@ const routes = [
   { path: '/users/add', name: 'Add Users', element: UsersAdd, permission:'edit rolespermission' },
   { path: '/users/edit', name: 'Edit Users', element: UsersEdit, permission:'edit rolespermission' },
   { path: '/users/edit/:user_id', name: 'Edit Users', element: UsersEdit, permission:'edit rolespermission' },
+  { path: '/modelcreator/add', name: 'Add Users', element: ModelCreatorAdd, permission:'edit rolespermission' },
 ]
 
 export default routes

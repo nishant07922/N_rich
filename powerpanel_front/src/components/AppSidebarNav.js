@@ -1,6 +1,6 @@
 import React from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
-import PropTypes from 'prop-types'
+import PropTypes, { array } from 'prop-types'
 import { useSelector } from 'react-redux'
 
 import { CBadge } from '@coreui/react'
@@ -9,7 +9,11 @@ import secureLocalStorage from 'react-secure-storage'
 export const AppSidebarNav = ({ items }) => {
   const location = useLocation()
   const tokenString = JSON.parse(secureLocalStorage.getItem('loginUser'))
-  let permissionsArr = tokenString.permissions
+  let permissionsArr = [];
+  
+  if(tokenString != null){
+    permissionsArr = tokenString.permissions
+  }
 
   permissionsArr.forEach((permission_obj ,index) => {
     permissionsArr[index] = permission_obj.name

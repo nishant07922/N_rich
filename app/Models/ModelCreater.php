@@ -4,9 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Models extends Model
+class ModelCreater extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
     protected $table = 'models';
 }

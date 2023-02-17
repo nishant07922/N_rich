@@ -8,6 +8,7 @@ use App\Models\Roles;
 use Spatie\Permission\Models\Role;
 use App\Models\Users;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 use Exception;
 
 class UsersController extends Controller
@@ -118,5 +119,23 @@ class UsersController extends Controller
             return false;
         }
         return Users::destroy(json_decode($users));
+    }
+
+    public function test(Request $request) {
+        // prepare content
+        $content = "Test Man \n";
+    
+        // file name that will be used in the download
+        $fileName = "logs.txt";
+    
+        // use headers in order to generate the download
+        $headers = [
+          'Content-type' => 'text/plain', 
+          'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
+          'Content-Length' => strlen($content)
+        ];
+    
+        // make a response, with the content, a 200 response code and the headers
+        return Response::make($content, 200, $headers);
     }
 }
