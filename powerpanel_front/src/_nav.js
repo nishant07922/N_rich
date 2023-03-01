@@ -303,6 +303,26 @@ const _nav = [
       },
     ],
   },
+  {
+    component: CNavGroup,
+    name: 'Bill',
+    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+    permission:['list users','list rolespermission'],
+    items: [
+      {
+        component: CNavItem,
+        name: 'Bill Create',
+        to: '/createbill/add',
+        permission:['list rolespermission'],
+      },
+      {
+        component: CNavItem,
+        name: 'All Bills',
+        to: '/bills',
+        permission:['list rolespermission'],
+      },
+    ],
+  },
   // {
   //   component: CNavItem,
   //   name: 'Docs',

@@ -7,6 +7,7 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\RolesPermissionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\BillController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,4 +39,5 @@ Route::get("test",[UsersController::class,'test'] );
 Route::apiResource('roles', RolesController::class);
 Route::get('selectroles', [RolesController::class,'selectroles']);
 Route::apiResource('users', UsersController::class);
+Route::apiResource('bill', BillController::class);
 Route::apiResource('rolepermission', RolesPermissionController::class);

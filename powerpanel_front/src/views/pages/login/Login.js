@@ -62,7 +62,7 @@ const Login = () => {
               "permissions":res.data.permissions
             }))
           
-            navigate('/')
+            navigate('/dashboard')
           }
         })
         .catch(function (error) {

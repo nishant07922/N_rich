@@ -199,7 +199,6 @@ const UsersAdd = () => {
                                                 required
                                             />
                                         </div>
-
                                     </CCol>
                                     <CCol md={4} >
                                         <div className="mb-3">

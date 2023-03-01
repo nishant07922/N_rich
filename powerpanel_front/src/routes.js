@@ -63,6 +63,10 @@ const UsersEdit = React.lazy(() => import('./views/users/UsersEdit'))
 //Model Creator
 const ModelCreatorAdd = React.lazy(() => import('./views/modelcreator/ModelCreatorAdd'))
 
+const CreateBillAdd = React.lazy(() => import('./views/billing/CreateBillAdd'))
+const Bills = React.lazy(() => import('./views/billing/Bills'))
+const BasicDocument = React.lazy(() => import('./views/billing/BasicDocument'))
+
 //Roles Permission
 const RolesPermissionAdd = React.lazy(() => import('./views/rolepermission/RolePermissionAdd'))
 const RolesPermissionEdit = React.lazy(() => import('./views/rolepermission/RolePermissionEdit'))
@@ -124,6 +128,9 @@ const routes = [
   { path: '/users/edit', name: 'Edit Users', element: UsersEdit, permission:'edit rolespermission' },
   { path: '/users/edit/:user_id', name: 'Edit Users', element: UsersEdit, permission:'edit rolespermission' },
   { path: '/modelcreator/add', name: 'Add Users', element: ModelCreatorAdd, permission:'edit rolespermission' },
+  { path: '/bills', name: 'All Bills', element: Bills, permission:'edit rolespermission' },
+  { path: '/bills/add', name: 'Add Bill', element: CreateBillAdd, permission:'edit rolespermission' },
+  { path: '/pdfshow', name: 'Add Users', element: BasicDocument, permission:'edit rolespermission' },
 ]
 
 export default routes
