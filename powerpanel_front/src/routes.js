@@ -130,7 +130,7 @@ const routes = [
   { path: '/modelcreator/add', name: 'Add Users', element: ModelCreatorAdd, permission:'edit rolespermission' },
   { path: '/bills', name: 'All Bills', element: Bills, permission:'edit rolespermission' },
   { path: '/bills/add', name: 'Add Bill', element: CreateBillAdd, permission:'edit rolespermission' },
-  { path: '/pdfshow', name: 'Add Users', element: BasicDocument, permission:'edit rolespermission' },
+  // { path: '/pdfshow', name: 'Add Users', element: BasicDocument, permission:'edit rolespermission' },
 ]
 
 export default routes

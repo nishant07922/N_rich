@@ -312,7 +312,7 @@ const _nav = [
       {
         component: CNavItem,
         name: 'Bill Create',
-        to: '/createbill/add',
+        to: '/bills/add',
         permission:['list rolespermission'],
       },
       {
