@@ -26,6 +26,7 @@ const CreateBillAdd = () => {
     const [bill_site, setBillSite] = useState()
     const [buyer_address, setBuyerAddress] = useState()
     const [buyer_gst, setBuyerGst] = useState()
+    const [buyer_name, setBuyerName] = useState()
     const [fields, setFields] = useState()
     const [success, setSuccess] = useState(false)
     const [error, setError] = useState(false)
@@ -82,6 +83,9 @@ const CreateBillAdd = () => {
     const onChangeBuyerAddress = (e) => {
         setBuyerAddress(e.target.value)
     }
+    const onChangeBuyerName = (e) => {
+        setBuyerName(e.target.value)
+    }
     const onProductChange = (index, option) => {
         let newFormValues = [...formValues];
         newFormValues[index].description = option.text;
@@ -104,7 +108,7 @@ const CreateBillAdd = () => {
         let day = date.getDate();
         let month = date.getMonth();
         let year = date.getFullYear();
-        date = year + '-'+ (month+1) + '-' +day;
+        date = year + '-' + (month + 1) + '-' + day;
 
         if (form.checkValidity() === false) {
             event.preventDefault()
@@ -115,6 +119,7 @@ const CreateBillAdd = () => {
                 bill_date: date,
                 bill_site: bill_site,
                 buyer_address: buyer_address,
+                buyer_name: buyer_name,
                 buyer_gst: buyer_gst,
                 fields: formValues,
             })
@@ -178,7 +183,7 @@ const CreateBillAdd = () => {
                     </CCardHeader>
                     <CCardBody>
                         <CRow>
-                            
+
                             <CCol md={2}>
                                 <div className="mb-3">
                                     <label>Bill Date</label>
@@ -197,7 +202,19 @@ const CreateBillAdd = () => {
                                     />
                                 </div>
                             </CCol>
-                            <CCol md={6}>
+                            <CCol md={2}>
+                                <div className="mb-3">
+                                    <CFormInput
+                                        onChange={e => onChangeBuyerName(e)}
+                                        name="buyer_name"
+                                        feedbackInvalid="Please select a valid Input Name."
+                                        label="Buyer Name"
+                                        value={buyer_name}
+                                        required
+                                    />
+                                </div>
+                            </CCol>
+                            <CCol md={3}>
                                 <div className="mb-3">
                                     <CFormTextarea
                                         onChange={e => onChangeBuyerAddress(e)}
@@ -209,7 +226,7 @@ const CreateBillAdd = () => {
                                     />
                                 </div>
                             </CCol>
-                            <CCol md={2}>
+                            <CCol md={3}>
                                 <div className="mb-3">
                                     <CFormInput
                                         onChange={e => onChangeBuyerGst(e)}

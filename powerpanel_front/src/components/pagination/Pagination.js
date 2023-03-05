@@ -54,7 +54,7 @@ const Pagination = props => {
 
                 // If the pageItem is a DOT, render the DOTS unicode character
                 if (pageNumber === DOTS) {
-                    return <CPaginationItem className="pagination-item dots" disabled>&#8230;</CPaginationItem>;
+                    return <CPaginationItem key={index} className="pagination-item dots" disabled>&#8230;</CPaginationItem>;
                 }
 
                 // Render our Page Pills
@@ -67,7 +67,7 @@ const Pagination = props => {
                     // >
                     //     {pageNumber}
                     // </li>
-                    <CPaginationItem key={index}active={pageNumber === currentPage ? true : false} onClick={() => onPageChange(pageNumber)} >{pageNumber}</CPaginationItem>
+                    <CPaginationItem key={index} active={pageNumber === currentPage ? true : false} onClick={() => onPageChange(pageNumber)} >{pageNumber}</CPaginationItem>
                 );
             })}
             {/*  Right Navigation arrow */}

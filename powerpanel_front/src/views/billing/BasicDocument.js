@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { render } from "react-dom";
 import { renderToString } from "react-dom/server";
 import jsPDF from "jspdf";
+import apiClient from 'src/apiclients/apiClient'
+import { useParams } from 'react-router';
+import { dateFormat } from 'src/commonFunctions/commonFunctions'
 
 const styles = {
     fontFamily: "sans-serif",
@@ -13,99 +16,132 @@ const colstyle = {
 const tableStyle = {
     width: "100%"
 };
-const Prints = () => (
-    <>
 
+const Prints = ({ bill_data }) => {
+    if (Object.keys(bill_data).length != 0) {
+        let sub_total = 0
+        let gst = 0
+        let round_off = 0
+        let grand_total = 0
 
+        bill_data.fields_ids.forEach((data,index)=>{
+            let one_item_total = (data.rate * data.quantity)
+            sub_total += one_item_total
+        });
+        gst = (sub_total*9)/100;
+        grand_total = (gst * 2)+ sub_total;
+        
+        if(Math.round(grand_total) != grand_total){
+            round_off = grand_total -Math.round(grand_total);
+            round_off = Math.abs(round_off)
+            grand_total = Math.round(grand_total)
+        }
+        return (
+            <>
+                <div id="logo" style={{ marginBottom: '120px' }}>
 
+                </div>
+                <h1>TAX INVOICE - LABOUR</h1>
+                <div id="company" className="clearfix">
+                    <div>Marutinandan Tubewell</div>
+                    <div>20(B) Kalakunj Soc.,<br />Ghatlodia ,<br />AH 380061 ,India .</div>
+                    <div>99999999999999</div>
+                    <div>GST NO : 24DBDPP7089F1ZD</div>
+                    <div>marutinandantubewell2014@gmail.com</div>
+                </div>
+                <div id="project">
+                    <div><span>BILL NO</span> {bill_data.id}</div>
+                    <div><span>DATE</span> {dateFormat(bill_data.bill_date, 'dd/MM/yyyy')}</div>
+                    <div><span>CLIENT</span> {bill_data.buyer_name}</div>
+                    <div><span>ADDRESS</span> {bill_data.buyer_address}</div>
+                    <div><span>GST NO</span> 24AGWPP7890H1ZI</div>
+                    <div><span>SITE</span> Mehsana</div>
+                </div>
+                <main>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th className="desc">SI No</th>
+                                <th className="desc">DESCRIPTION</th>
+                                <th style={{paddingRight: '5px' ,paddingLeft:'5px'}}>HSN CODE</th>
+                                <th>PRICE</th>
+                                <th style={{width: '11%'}}>QTY</th>
+                                <th>TOTAL</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-        <div id="logo" style={{ marginBottom: '150px' }}>
+                            {bill_data.fields_ids.map((data, index) => {
+                                return (
+                                    <tr key={index}>
+                                        <td className="service">{index+1}</td>
+                                        <td className="description-table">{data.description}</td>
+                                        <td className="unit">{data.hsn_code}</td>
+                                        <td className="unit">₹{new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format(data.rate)}</td>
+                                        <td className="qty">{data.quantity} {data.quantity_unit}</td>
+                                        <td className="total">₹{new Intl.NumberFormat('en-IN', { maximumSignificantDigits: 3 }).format((data.rate * data.quantity))}.00</td>
+                                    </tr>
+                                );
+                            })}
 
-        </div>
-        <h1>INVOICE 3-2-1</h1>
-        <div id="company" className="clearfix">
-            <div>Company Name</div>
-            <div>455 Foggy Heights,<br /> AZ 85004, US</div>
-            <div>(602) 519-0450</div>
-            <div><a href="mailto:company@example.com">company@example.com</a></div>
-        </div>
-        <div id="project">
-            <div><span>PROJECT</span> Website development</div>
-            <div><span>CLIENT</span> John Doe</div>
-            <div><span>ADDRESS</span> 796 Silver Harbour, TX 79273, US</div>
-            <div><span>EMAIL</span> <a href="mailto:john@example.com">john@example.com</a></div>
-            <div><span>DATE</span> August 17, 2015</div>
-            <div><span>DUE DATE</span> September 17, 2015</div>
-        </div>
-        <main>
-            <table>
-                <thead>
-                    <tr>
-                        <th className="service">SERVICE</th>
-                        <th className="desc">DESCRIPTION</th>
-                        <th>PRICE</th>
-                        <th>QTY</th>
-                        <th>TOTAL</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td className="service">Design</td>
-                        <td className="desc">Creating a recognizable design solution based on the company's existing visual identity</td>
-                        <td className="unit">$40.00</td>
-                        <td className="qty">26</td>
-                        <td className="total">$1,040.00</td>
-                    </tr>
-                    <tr>
-                        <td className="service">Development</td>
-                        <td className="desc">Developing a Content Management System-based Website</td>
-                        <td className="unit">$40.00</td>
-                        <td className="qty">80</td>
-                        <td className="total">$3,200.00</td>
-                    </tr>
-                    <tr>
-                        <td className="service">SEO</td>
-                        <td className="desc">Optimize the site for search engines (SEO)</td>
-                        <td className="unit">$40.00</td>
-                        <td className="qty">20</td>
-                        <td className="total">$800.00</td>
-                    </tr>
-                    <tr>
-                        <td className="service">Training</td>
-                        <td className="desc">Initial training sessions for staff responsible for uploading web content</td>
-                        <td className="unit">$40.00</td>
-                        <td className="qty">4</td>
-                        <td className="total">$160.00</td>
-                    </tr>
-                    <tr>
-                        <td colSpan="4">SUBTOTAL</td>
-                        <td className="total">$5,200.00</td>
-                    </tr>
-                    <tr>
-                        <td colSpan="4">TAX 25%</td>
-                        <td className="total">$1,300.00</td>
-                    </tr>
-                    <tr>
-                        <td colSpan="4" className="grand total">GRAND TOTAL</td>
-                        <td className="grand total">$6,500.00</td>
-                    </tr>
-                </tbody>
-            </table>
-            <div id="notices">
-                <div>NOTICE:</div>
-                <div className="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
-            </div>
-            <div style={{float:'right',marginTop:'50px'}}>
-                <div><h6>For. MARUTINANDAN TUBEWELL</h6></div>
-                <div style={{marginTop:'70px',textAlign:'center'}} className="notice"><p>PROPRITAR</p></div>
-            </div>
-        </main>
-        <footer>
-            Invoice was created on a computer and is valid without the signature and seal.
-        </footer>
+                            <tr className="height-row">
+                                <td colSpan="5">SUBTOTAL</td>
+                                <td className="total">{sub_total}</td>
+                            </tr>
+                            <tr className="height-row">
+                                <td colSpan="5">CGST 9%</td>
+                                <td className="total">{gst}</td>
+                            </tr>
+                            <tr className="height-row">
+                                <td colSpan="5">SGST 9%</td>
+                                <td className="total">{gst}</td>
+                            </tr>
+                            <tr className="height-row">
+                                <td colSpan="5">ROUND OFF</td>
+                                <td className="total">{round_off}</td>
+                            </tr>
+                            <tr className="height-row">
+                                <td colSpan="5" className="grand total">GRAND TOTAL</td>
+                                <td className="grand total">{grand_total}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                        <div id="notices" style={{ width: '541px' }}>
+                            <div className="notice">Terms & Conditions:</div>
+                            <ol>
+                                <li>
+                                    Subject to Ahmedabad Jurisdiction.
+                                </li>
+                                <li>
+                                    All disputes to be settle at Ahmedabad.
+                                </li>
+                            </ol>
+                            <div className="notice">Bank Details:</div>
+                            <ol>
+                                <li>
+                                    Subject to Ahmedabad Jurisdiction.
+                                </li>
+                                <li>
+                                    All disputes to be settle at Ahmedabad.
+                                </li>
+                            </ol>
+                        </div>
 
-    </>
-);
+                        <div style={{ float: 'right', marginTop: '50px' }}>
+                            <div><h6>For. MARUTINANDAN TUBEWELL</h6></div>
+                            <div style={{ marginTop: '70px', textAlign: 'center' }} className="notice"><p>PROPRITAR</p></div>
+                        </div>
+                    </div>
+                </main>
+                {/* <footer>
+                Invoice was created on a computer and is valid without the signature and seal.
+            </footer> */}
+
+            </>
+        )
+    }
+};
 
 
 const print = () => {
@@ -143,9 +179,25 @@ const print = () => {
     // pdf.save("pdf");
 };
 
-const App = () => (
-    <>  <style>
-        {`
+const App = () => {
+
+    const { id } = useParams();
+    const [data, setData] = useState({});
+
+    useEffect(() => {
+        apiClient.get('/bill/' + id
+        )
+            .then((res) => {
+                setData(res.data)
+            })
+            .catch(function (error) {
+                console.log(error)
+            });
+    }, [])
+    return (
+
+        <>  <style>
+            {`
 .clearfix:after {
 content: "";
 display: table;
@@ -181,6 +233,9 @@ margin-bottom: 10px;
 
 #logo img {
 width: 90px;
+}
+.height-row{
+    line-height: 0px;
 }
 
 h1 {
@@ -238,8 +293,9 @@ table th {
 padding: 5px 20px;
 color: #5D6975;
 border-bottom: 1px solid #C1CED9;
+border-top: 1px solid #C1CED9;
 white-space: nowrap;        
-font-weight: normal;
+font-weight: bold;
 }
 
 table .service,
@@ -247,6 +303,11 @@ table .desc {
 text-align: left;
 }
 
+.description-table{
+    text-align: left;
+    vertical-align: top;
+    font-size: 1.1em;
+}
 table td {
 padding: 20px;
 text-align: right;
@@ -283,12 +344,15 @@ padding: 8px 0;
 text-align: center;
 }
 `}
-    </style>
-        <div id="content-22">
-            <Prints />
-        </div>
-        {/* <button onClick={print}>print</button> */}
-    </>
-);
+        </style>
+            <div id="content-22">
+                <Prints
+                    bill_data={data}
+                />
+            </div>
+            {/* <button onClick={print}>print</button> */}
+        </>
+    )
+};
 
 export default App;

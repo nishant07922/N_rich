@@ -23,12 +23,29 @@ class BillController extends Controller
     {
         $filters = $request->header('filters');
         $role_id = $request->header('roleId');
-        $role = Role::findById($role_id,null);
-        
-        if(!$role->hasPermissionTo('list users')){
+        $role = Role::findById($role_id, null);
+
+        if (!$role->hasPermissionTo('list users')) {
             return false;
         }
-        $phone = Bills::tablefilter($filters)->get();
+        if ($filters != null) {
+            $phone = Bills::tablefilter($filters)->get();
+        } else {
+            $phone = Bills::get();
+        }
+        return ($phone);
+    }
+    public function data_with_id(Request $request, $bill_id)
+    {
+
+        $role_id = $request->header('roleId');
+        $role = Role::findById($role_id, null);
+
+        if (!$role->hasPermissionTo('list users')) {
+            return false;
+        }
+        $phone = Bills::find($bill_id);
+
         return ($phone);
     }
 
@@ -44,8 +61,8 @@ class BillController extends Controller
         $payload = json_decode($request->getContent(), true);
         $fields_ids = array();
         $all_fields = $payload['fields'];
-        
-        foreach($all_fields as $index=>$field){
+
+        foreach ($all_fields as $index => $field) {
             $BillFields = new BillFields;
             $BillFields->product_id = $field['product_id'];
             $BillFields->description = $field['description'];
@@ -56,12 +73,13 @@ class BillController extends Controller
             $BillFields->save();
             $fields_ids[$index] = $BillFields->id;
         }
-        
-        $fields_ids_str = implode(",",$fields_ids);
+
+        $fields_ids_str = implode(",", $fields_ids);
         $fields = array(
             'bill_date' => $payload['bill_date'],
             'bill_site' => $payload['bill_site'],
             'buyer_address' => $payload['buyer_address'],
+            'buyer_name' => $payload['buyer_name'],
             'buyer_gst' => $payload['buyer_gst'],
             'fields_ids' => $fields_ids_str,
         );
@@ -71,10 +89,10 @@ class BillController extends Controller
         // $bill_create->buyer_address = $payload['buyer_address'];
         // $bill_create->buyer_gst = $payload['buyer_gst'];
         // $bill_create->fields_ids = $fields_ids;
-       
-        $user['data'] =  Bills::create($fields);
+
+        $user['data'] = Bills::create($fields);
         $user['success_message'] = "Bill has been created successfully.";
-       
+
         return json_encode($user);
     }
 
@@ -86,21 +104,25 @@ class BillController extends Controller
      */
     public function show($users, Request $request)
     {
-        $role_id = $request->header('roleId');
-        
-        $role = Role::findById($role_id,null);
-        
-        if(!$role->hasPermissionTo('edit users')){
-            return false;
+        // $role_id = $request->header('roleId');
+
+        // $role = Role::findById($role_id,null);
+
+        // if(!$role->hasPermissionTo('edit users')){
+        //     return false;
+        // }
+
+        $bills = Bills::find(intval($users));
+        $bills_fields = explode(",", $bills->fields_ids);
+        foreach ($bills_fields as $index => $bills_field_id) {
+            $data = BillFields::find($bills_field_id);
+            $array[$index] = $data;
+            $bills->fields_ids = $array;
         }
+        // dd($bills);
+        // $users->email = base64_decode($users->email);
 
-        $users =  Bills::select('id', 'name', 'email', 'roleId')
-            ->rolePermission($role_id)
-            ->find(intval($users));
-
-        $users->email = base64_decode($users->email);
-
-        return $users;
+        return $bills;
     }
 
     /**
@@ -131,32 +153,33 @@ class BillController extends Controller
      * @param  \App\Models\Bills  $users
      * @return \Illuminate\Http\Response
      */
-    public function destroy($users,Request $request)
+    public function destroy($users, Request $request)
     {
         $role_id = $request->header('roleId');
 
-        $role = Role::findById($role_id,null);
-        
-        if(!$role->hasPermissionTo('delete users')){
+        $role = Role::findById($role_id, null);
+
+        if (!$role->hasPermissionTo('delete users')) {
             return false;
         }
         return Bills::destroy(json_decode($users));
     }
 
-    public function test(Request $request) {
+    public function test(Request $request)
+    {
         // prepare content
         $content = "Test Man \n";
-    
+
         // file name that will be used in the download
         $fileName = "logs.txt";
-    
+
         // use headers in order to generate the download
         $headers = [
-          'Content-type' => 'text/plain', 
-          'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
-          'Content-Length' => strlen($content)
+            'Content-type' => 'text/plain',
+            'Content-Disposition' => sprintf('attachment; filename="%s"', $fileName),
+            'Content-Length' => strlen($content)
         ];
-    
+
         // make a response, with the content, a 200 response code and the headers
         return Response::make($content, 200, $headers);
     }

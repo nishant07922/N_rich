@@ -24,5 +24,6 @@ module.exports = {
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
     // "prettier/prettier": ["error", { endOfLine: "auto" }],
     "prettier/prettier": 0,
+    "react/prop-types": "off"
   },
 }

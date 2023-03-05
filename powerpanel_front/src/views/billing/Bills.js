@@ -174,6 +174,7 @@ const Users = () => {
               <CTableHeaderCell scope="col">Site Name</CTableHeaderCell>
               <CTableHeaderCell scope="col">Items</CTableHeaderCell>
               <CTableHeaderCell scope="col">Total Amount</CTableHeaderCell>
+              <CTableHeaderCell scope="col">Pdf</CTableHeaderCell>
               <CTableHeaderCell scope="col">Actions</CTableHeaderCell>
             </CTableRow>
           </CTableHead>
@@ -198,6 +199,11 @@ const Users = () => {
                     </CTableDataCell>
                     <CTableDataCell>{new Date(item.created_at).toLocaleString()}</CTableDataCell>
                     <CTableDataCell>{new Date(item.updated_at).toLocaleString()}</CTableDataCell>
+                    <CTableDataCell>
+                      <Link target="_blank" style={{ 'textDecoration': 'none' }} to={"/pdfshow/" + item.id}>
+                        Show
+                      </Link>
+                    </CTableDataCell>
                     <CTableDataCell>
                       <CIcon icon={cilXCircle} data-value={item.id} onClick={deleteId} className="flex-shrink-0 me-2" width={24} height={24} />
                     </CTableDataCell>
